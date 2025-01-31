@@ -6,7 +6,6 @@
 
 # Output: Tokens to be added to the index (vocabulary)
 
-
 import json
 import os
 import nltk
@@ -50,6 +49,6 @@ def preprocess_corpus(input_file, output_file):
     print(f"Preprocessing complete. Results saved to {output_file}.")
 
 
-input_file = "data/corpus2.jsonl"
+input_file = "data/corpus.jsonl"
 output_file = "data/corpus_preprocessed.jsonl"
 preprocess_corpus(input_file, output_file)
