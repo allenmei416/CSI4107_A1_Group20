@@ -10,31 +10,89 @@
 
 from elasticsearch import Elasticsearch
 import json
+import time
 
 es = Elasticsearch("http://localhost:9200")
 
 index_name = "inverted_index"
+body = {
+	"settings": {
+	  "number_of_shards": 1,
+
+	  "analysis": {
+	    "analyzer": {
+        "my_analyzer": {
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "stop",
+            "porter_stem"
+          ],
+          "char_filter": ["html_strip", "number_filter"]
+        }	  
+      },
+      "char_filter":{
+          "number_filter":{
+          "type":"pattern_replace",
+          "pattern":"\\d+",
+          "replacement":""
+        }
+      }, 
+      "similarity": {
+        "custom_bm25": { 
+          "type": "BM25",
+          "b":    0 , # b and k1 can be changed to tune indexing; index must be rebuilt after
+          "k1" : 1.2 
+        }
+      }
+	  }
+	},
+    "mappings": {
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "title": {
+          "type": "text"
+        },
+        "content": {
+          "type": "text"
+        }
+	  }
+	}
+}
 
 def index_documents(input_file):
     with open(input_file, "r") as infile:
         for i, line in enumerate(infile):
             doc = json.loads(line)
-            
-            if "tokens" in doc:
-                elastic_doc = {
-                    "tokens": doc["tokens"],
-                }
-                
-                es.index(index=index_name, id=i + 1, document=elastic_doc)
+            ids = doc.pop('_id')
+            doc['id'] = ids
+            es.index(index=index_name, document=doc, id=ids)
             
             if (i + 1) % 1000 == 0:
                 print(f"Indexed {i + 1} documents...")
 
     print("Indexing complete.")
 
-input_file = "data/corpus_preprocessed.jsonl"
-index_documents(input_file)
 
+def create_index():
+    # init index, delete if it already exists then create
+    if es.indices.exists(index=index_name):
+        es.indices.delete(index=index_name)
+    es.indices.create(index=index_name)
+
+    # add documents to index
+    input_file = "data/corpus.jsonl"
+    index_documents(input_file)
+
+
+
+# TESTS ---------------------------------------------------------------------
+create_index()
+
+# wait for index to complete
+time.sleep(2)
 
 # Check the total number of documents in the index
 response = es.count(index=index_name)
