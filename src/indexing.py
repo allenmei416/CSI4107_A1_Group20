@@ -77,7 +77,7 @@ def create_index(es, index_name):
     # init index, delete if it already exists then create
     if es.indices.exists(index=index_name):
         es.indices.delete(index=index_name)
-    es.indices.create(index=index_name)
+    es.indices.create(index=index_name, body=body)
 
     # add documents to index
     input_file = "data/corpus.jsonl"
