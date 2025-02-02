@@ -12,9 +12,6 @@ from elasticsearch import Elasticsearch
 import json
 import time
 
-es = Elasticsearch("http://localhost:9200")
-
-index_name = "inverted_index"
 body = {
 	"settings": {
 	  "number_of_shards": 1,
@@ -62,7 +59,7 @@ body = {
 	}
 }
 
-def index_documents(input_file):
+def index_documents(es, input_file, index_name):
     with open(input_file, "r") as infile:
         for i, line in enumerate(infile):
             doc = json.loads(line)
@@ -76,7 +73,7 @@ def index_documents(input_file):
     print("Indexing complete.")
 
 
-def create_index():
+def create_index(es, index_name):
     # init index, delete if it already exists then create
     if es.indices.exists(index=index_name):
         es.indices.delete(index=index_name)
@@ -84,20 +81,23 @@ def create_index():
 
     # add documents to index
     input_file = "data/corpus.jsonl"
-    index_documents(input_file)
+    index_documents(es, input_file, index_name)
 
 
 
 # TESTS ---------------------------------------------------------------------
-create_index()
+# es = Elasticsearch("http://localhost:9200")
 
-# wait for index to complete
-time.sleep(2)
+# index_name = "inverted_index"
+# create_index(es, index_name)
 
-# Check the total number of documents in the index
-response = es.count(index=index_name)
-print(f"Total documents in index: {response['count']}")
+# # wait for index to complete
+# time.sleep(2)
 
-# Retrieve a sample document from the index
+# # Check the total number of documents in the index
+# response = es.count(index=index_name)
+# print(f"Total documents in index: {response['count']}")
+
+# # Retrieve a sample document from the index
 # sample_doc = es.get(index=index_name, id=2)  # Replace `1` with a valid document ID
 # print(json.dumps(sample_doc["_source"], indent=2))

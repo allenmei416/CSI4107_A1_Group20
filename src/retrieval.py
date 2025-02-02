@@ -9,20 +9,13 @@
 from elasticsearch import Elasticsearch
 import json
 
-es = Elasticsearch("http://localhost:9200")
-
-run_name = "test_run"
-input_file = "data/queries.jsonl"
-output_file = "data/results.txt"
-index_name = "inverted_index"
-
-def run_queries():
+def run_queries(es, run_name, query_file, result_file, index_name):
     # create output file
-    output = open(output_file, "w")
+    output = open(result_file, "w")
     output.close()
 
     # read queries from file
-    with open(input_file, "r") as infile:
+    with open(query_file, "r") as infile:
         for i, line in enumerate(infile):
             query = json.loads(line)
             id = query['_id']
@@ -39,23 +32,45 @@ def run_queries():
                    }
                 },
                 size=100
-             )
+            )
+            
+            # get normalized scores
+            normalized_scores = normalize_scores(response)
             
             # write results to file
-            results = open(output_file, "a")
+            results = open(result_file, "a")
             rank = 0
-
+            score_index = 0
+            
             for doc in response["hits"]["hits"]:
                 doc_id = doc['_id']
-                score = doc["_score"] # TODO: normalize score so that its between 0 and 1
+                score = normalized_scores[score_index]
                 rank += 1
+                score_index += 1
 
                 result_string = id + "\tQ0\t " + doc_id + "\t" + str(rank) + "\t" + str(score) + "\t" + run_name + "\n"
+                result_string = f"{id} Q0 {doc_id} {rank} {score} {run_name}\n"
                 results.write(result_string)
             
             results.close()
+            
+    print(f"All queries retrieved. Results saved to { result_file }.")
+
+# min-max normalization (first result will always be 1 and last result will always be 0)
+def normalize_scores(response):
+    scores = [hit['_score'] for hit in response['hits']['hits']]
+    max_score = max(scores)
+    min_score = min(scores)
+    
+    return [(score - min_score) / (max_score - min_score) if max_score > min_score else 0 for score in scores]
 
 
 
 # TESTS ---------------------------------------------------------------------
-run_queries()
+# es = Elasticsearch("http://localhost:9200")
+
+# run_name = "test_run"
+# query_file = "data/queries_test.jsonl"
+# result_file = "data/results_test.txt"
+# index_name = "inverted_index"
+# run_queries(es, run_name, query_file, result_file, index_name)

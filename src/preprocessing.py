@@ -51,4 +51,4 @@ def preprocess_corpus(input_file, output_file):
 
 input_file = "data/corpus.jsonl"
 output_file = "data/corpus_preprocessed.jsonl"
-preprocess_corpus(input_file, output_file)
+# preprocess_corpus(input_file, output_file)
