@@ -73,14 +73,13 @@ def index_documents(es, input_file, index_name):
     print("Indexing complete.")
 
 
-def create_index(es, index_name):
+def create_index(es, input_file, index_name):
     # init index, delete if it already exists then create
     if es.indices.exists(index=index_name):
         es.indices.delete(index=index_name)
     es.indices.create(index=index_name, body=body)
 
     # add documents to index
-    input_file = "data/corpus.jsonl"
     index_documents(es, input_file, index_name)
 
 
@@ -88,8 +87,10 @@ def create_index(es, index_name):
 # TESTS ---------------------------------------------------------------------
 # es = Elasticsearch("http://localhost:9200")
 
+# input_file = "../data/corpus.jsonl"
+
 # index_name = "inverted_index"
-# create_index(es, index_name)
+# create_index(es, input_file, index_name)
 
 # # wait for index to complete
 # time.sleep(2)
@@ -99,5 +100,5 @@ def create_index(es, index_name):
 # print(f"Total documents in index: {response['count']}")
 
 # # Retrieve a sample document from the index
-# sample_doc = es.get(index=index_name, id=2)  # Replace `1` with a valid document ID
+# sample_doc = es.get(index=index_name, id=0)  # Replace `1` with a valid document ID
 # print(json.dumps(sample_doc["_source"], indent=2))
