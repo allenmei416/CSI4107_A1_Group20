@@ -30,9 +30,9 @@ body = {
       },
       "char_filter":{
           "number_filter":{
-          "type":"pattern_replace",
-          "pattern":"\\d+",
-          "replacement":""
+            "type":"pattern_replace",
+            "pattern":"\\d+",
+            "replacement":""
         }
       }, 
       "similarity": {
@@ -52,7 +52,7 @@ body = {
         "title": {
           "type": "text"
         },
-        "content": {
+        "text": {
           "type": "text"
         }
 	  }

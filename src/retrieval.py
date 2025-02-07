@@ -48,7 +48,6 @@ def run_queries(es, run_name, query_file, result_file, index_name):
                 rank += 1
                 score_index += 1
 
-                result_string = id + "\tQ0\t " + doc_id + "\t" + str(rank) + "\t" + str(score) + "\t" + run_name + "\n"
                 result_string = f"{id} Q0 {doc_id} {rank} {score} {run_name}\n"
                 results.write(result_string)
             
