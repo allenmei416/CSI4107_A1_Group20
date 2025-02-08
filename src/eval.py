@@ -2,9 +2,8 @@ import pytrec_eval
 import json
 from collections import defaultdict
 
-qrel_file = 'data/qrels/test.tsv'
-run_file = 'data/results.txt'
-output_file = 'data/eval.'
+qrel_file = '../data/qrels/test.tsv'
+run_file = '../data/results/results_title_text.txt'
 
 # modified pytrec_eval.parse_qrel to better fit our file format
 def parse_qrel(f_qrel):
@@ -19,6 +18,12 @@ def parse_qrel(f_qrel):
 
     return qrel
 
+# get average
+def avg_map(eval_results):
+    map_values = [query['map'] for query in eval_results.values()]
+    average_map = sum(map_values) / len(map_values)
+    
+    return average_map
 
 with open(qrel_file, 'r') as qrel_f:
     qrel = parse_qrel(qrel_f)
@@ -32,14 +37,4 @@ evaluator = pytrec_eval.RelevanceEvaluator(
 # MAP score of all test queries
 eval_results = evaluator.evaluate(run)
 
-# get average
-map_values = [query['map'] for query in eval_results.values()]
-average_map = sum(map_values) / len(map_values)
-print(average_map)
-
-'''
-TODO: run only titles and both titles/full text
-calculate MAP for both and compare
-
-optional: play around with the BM25 parameters and see if they give better results overall
-'''
+print(f"MAP score: { avg_map(eval_results) }")

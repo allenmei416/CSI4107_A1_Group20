@@ -8,7 +8,7 @@ import retrieval as retrieval
 run_name = "test_run"
 corpus_file = "../data/corpus.jsonl"
 query_file = "../data/queries.jsonl"
-result_file = "../data/results.txt"
+result_file = "../data/results/results.txt"
 output_file = "../data/corpus_preprocessed.jsonl"
 index_name = "inverted_index"
 
