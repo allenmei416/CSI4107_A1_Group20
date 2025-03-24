@@ -4,11 +4,13 @@ from elasticsearch import Elasticsearch
 import preprocessing as preprocess
 import indexing as index
 import retrieval as retrieval
+import rerank_BERT as rerank
 
 run_name = "test_run"
 corpus_file = "../data/corpus.jsonl"
 query_file = "../data/queries.jsonl"
 result_file = "../data/results/results.txt"
+result_file_bert = "../data/results/results_bert.txt"
 output_file = "../data/corpus_preprocessed.jsonl"
 index_name = "inverted_index"
 
@@ -24,3 +26,7 @@ index.create_index(es, corpus_file, index_name)
 # 3 - retrieval
 print("Running queries...")
 retrieval.run_queries(es, run_name, query_file, result_file, index_name)
+
+# 3 - reranking with BERT SentenceTransformer
+print("Running queries...")
+rerank.run_queries_BERT(es, run_name, query_file, result_file_bert, index_name)
