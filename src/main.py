@@ -4,7 +4,7 @@ from elasticsearch import Elasticsearch
 #import preprocessing as preprocess
 import indexing as index
 import retrieval as retrieval
-import rerank_BERT as rerank_BERT
+import rerank_BERT2 as rerank_BERT
 import rerank_FAISS as rerank_FAISS
 import rerank_cross_encoder as rerank_cross_encoder
 
@@ -33,10 +33,10 @@ es = Elasticsearch("http://localhost:9200")
 
 # 4 - reranking with BERT SentenceTransformer
 print("Running queries...")
-# rerank_BERT.run_queries_BERT(es, run_name, query_file, result_file_bert, index_name)
+rerank_BERT.run_queries_BERT(es, run_name, query_file, result_file_bert, index_name)
 
 
 # 5 - reranking with FAISS
 # rerank_FAISS.run_queries_FAISS(es, run_name, query_file, result_file_faiss, index_name)
 
-rerank_cross_encoder.run_queries_cross_encoder(es, run_name, query_file, result_file_cross_encoder, index_name)
+#rerank_cross_encoder.run_queries_cross_encoder(es, run_name, query_file, result_file_cross_encoder, index_name)
