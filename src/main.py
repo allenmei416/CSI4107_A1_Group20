@@ -1,11 +1,12 @@
 # Run the entire pipeline
 
 from elasticsearch import Elasticsearch
-import preprocessing as preprocess
+#import preprocessing as preprocess
 import indexing as index
 import retrieval as retrieval
 import rerank_BERT as rerank_BERT
 import rerank_FAISS as rerank_FAISS
+import rerank_cross_encoder as rerank_cross_encoder
 
 run_name = "test_run"
 corpus_file = "../data/corpus.jsonl"
@@ -13,6 +14,7 @@ query_file = "../data/queries.jsonl"
 result_file = "../data/results/results.txt"
 result_file_bert = "../data/results/results_bert.txt"
 result_file_faiss = "../data/results/results_faiss.txt"
+result_file_cross_encoder = "../data/results/results_cross_encoder.txt"
 output_file = "../data/corpus_preprocessed.jsonl"
 index_name = "inverted_index"
 
@@ -20,10 +22,10 @@ index_name = "inverted_index"
 es = Elasticsearch("http://localhost:9200")
 
 # 1 - preprocessing
-preprocess.preprocess_corpus(corpus_file, output_file)
+#preprocess.preprocess_corpus(corpus_file, output_file)
 
 # # 2 - indexing
-index.create_index(es, corpus_file, index_name)
+#index.create_index(es, corpus_file, index_name)
 
 # 3 - retrieval
 # print("Running queries...")
@@ -35,4 +37,6 @@ print("Running queries...")
 
 
 # 5 - reranking with FAISS
-rerank_FAISS.run_queries_FAISS(es, run_name, query_file, result_file_faiss, index_name)
+# rerank_FAISS.run_queries_FAISS(es, run_name, query_file, result_file_faiss, index_name)
+
+rerank_cross_encoder.run_queries_cross_encoder(es, run_name, query_file, result_file_cross_encoder, index_name)
