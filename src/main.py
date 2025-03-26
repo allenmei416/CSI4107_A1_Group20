@@ -11,7 +11,7 @@ import rerank_BERT_BM25 as rerank_BERT_BM25
 run_name = "test_run"
 corpus_file = "../data/corpus.jsonl"
 query_file = "../data/queries.jsonl"
-result_file = "../data/results/results.txt"
+result_file = "../data/results/results_base.txt"
 result_file_bert = "../data/results/results_bert.txt"
 result_file_bert_BM25 = "../data/results/results_bert_BM25.txt"
 result_file_cross_encoder = "../data/results/results_cross_encoder.txt"
