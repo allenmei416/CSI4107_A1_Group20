@@ -8,7 +8,6 @@ import rerank_BERT as rerank_BERT
 import rerank_cross_encoder as rerank_cross_encoder
 import rerank_BERT_BM25 as rerank_BERT_BM25
 import retrieval_BERT_only as bert_retrieval
-import retrieval_BERT_BM25 as bertBM25_retrieval
 
 run_name = "test_run"
 corpus_file = "../data/corpus.jsonl"
@@ -50,6 +49,3 @@ rerank_BERT_BM25.run_queries_BERT(es, run_name, query_file, result_file_bert_BM2
 
 # 7 - retrieval with BERT + cosine sim only
 # bert_retrieval.run_queries(run_name, corpus_file, query_file, result_file_bert_retrieval)
-
-# 8 - retrieval with BERT + BM25 only
-# bertBM25_retrieval.run_queries(run_name, corpus_file, query_file, result_file_bertBM25_retrieval)
